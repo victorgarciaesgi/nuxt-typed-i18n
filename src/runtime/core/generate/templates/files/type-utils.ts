@@ -1,8 +1,52 @@
+import type { TranslateOptions } from 'vue-i18n';
 import type { TranslationsDictionary } from './translations';
+
+export interface TypedComposerTranslation<
+  Translations extends Record<string, KeyOptions<any, any>> = {},
+  Locales = 'en-US',
+> {
+  <Key extends keyof Translations>(key: Key, ...[options]: ProcessKeyOptions<Translations, Key, []>): string;
+  <Key extends keyof Translations>(
+    key: Key,
+    ...[options]: ProcessKeyOptions<Translations, Key, [options: TranslateOptions<Locales>]>
+  ): string;
+  <Key extends keyof Translations>(
+    key: Key,
+    ...[options]: ProcessKeyOptions<Translations, Key, [defaultMsg: string]>
+  ): string;
+  <Key extends keyof Translations>(
+    key: Key,
+    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[], options: TranslateOptions<Locales>]>
+  ): string;
+  <Key extends keyof Translations>(
+    key: Key,
+    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[], defaultMsg: string]>
+  ): string;
+  <Key extends keyof Translations>(
+    key: Key,
+    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[], plural: number]>
+  ): string;
+}
+
+type ProcessKeyOptions<
+  Translations extends Record<string, KeyOptions<any, any>>,
+  Key extends keyof Translations,
+  TAdditionalArgs extends [...any[]] = [],
+> = Key extends keyof Translations
+  ? [Translations[Key]['args']] extends [never]
+    ? TAdditionalArgs
+    : Translations[Key]['plural'] extends true
+      ? [plural: number, ...TAdditionalArgs] | [named: Translations[Key]['args'], ...TAdditionalArgs]
+      : [named: Translations[Key]['args'], ...TAdditionalArgs]
+  : TAdditionalArgs;
 
 export type TupleIndices<T extends readonly any[]> =
   Extract<keyof T, `${number}`> extends `${infer N extends number}` ? N : never;
-export type SingleParameter = string | number | boolean | Date | undefined | null;
+export type TranslationArg = string | number | boolean | Date | undefined | null;
+export type KeyOptions<Args extends Record<string, any> = never, Plural extends boolean = false> = {
+  args: Args;
+  plural: Plural;
+};
 
 export type TranslationKey = keyof TranslationsDictionary;
 
@@ -14,7 +58,7 @@ export type TranslationParameters<TKey extends keyof TranslationsDictionary> = T
   ? TranslationsDictionary[TKey] extends [never]
     ? any
     : TranslationsDictionary[TKey] extends [...any[]]
-      ? TranslationsDictionary[TKey] | Record<TupleIndices<TranslationsDictionary[TKey]>, SingleParameter>
+      ? TranslationsDictionary[TKey] | Record<TupleIndices<TranslationsDictionary[TKey]>, TranslationArg>
       : TranslationsDictionary[TKey]
   : any;
 
@@ -62,7 +106,7 @@ export type TranslationKeyPart<T extends `${string}.*.${string}`> = T extends `$
     : never
   : never;
 
-export type CommonKeyRecord = Record<string, SingleParameter[] | Record<string, any>>;
+export type CommonKeyRecord = Record<string, TranslationArg[] | Record<string, any>>;
 
 // -- t function --
 

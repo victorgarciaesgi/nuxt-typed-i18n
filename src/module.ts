@@ -1,5 +1,5 @@
 import { addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit';
-import { extractDefaultMessages, extractI18nModuleOptions, generateTypes, createIndexTemplate } from './runtime/core';
+import { extractDefaultMessages, extractI18nModuleOptions, generateTypes } from './runtime/core';
 
 export interface ModuleOptions {
   /** Fallback path to static json file to parse at build time to generate the types */
@@ -48,30 +48,30 @@ export default defineNuxtModule<ModuleOptions>({
           });
 
           addTypeTemplate({
+            src: resolve('./runtime/core/generate/templates/files/index.ts'),
             filename: 'i18n/index.d.ts',
-            getContents: () => createIndexTemplate(),
             write: true,
           });
 
           addTypeTemplate({
-            src: resolve('./runtime/core/generate/templates/type-utils.d.ts'),
+            src: resolve('./runtime/core/generate/templates/files/type-utils.ts'),
             filename: 'i18n/type-utils.d.ts',
             write: true,
           });
 
           addTypeTemplate({
-            src: resolve('./runtime/core/generate/templates/useI18n.ts'),
+            src: resolve('./runtime/core/generate/templates/files/useI18n.ts'),
             filename: 'i18n/useI18n.d.ts',
             write: true,
           });
 
           addTypeTemplate({
-            src: resolve('./runtime/core/generate/templates/t.global.types.d.ts'),
+            src: resolve('./runtime/core/generate/templates/files/global.ts'),
             filename: 'i18n/t.global.types.d.ts',
             write: true,
           });
-        } catch {
-          //
+        } catch (error) {
+          console.error('[nuxt-typed-i18n] Error generating types', { cause: error });
         }
       }
     });

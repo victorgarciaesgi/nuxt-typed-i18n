@@ -4,6 +4,7 @@ import { extractParameters } from './extractParameters';
 import type { MatchedKey } from '../../types';
 import type { ExtractDefaultMessagesPayload } from '../../types/payloads';
 import { createMainTemplate } from './templates';
+import { isPluralTranslation } from '../../utils/isPluralTranslation';
 
 export function generateTypes({
   locales: { defaultLocaleFound = 'en-US', defaultMessages, availableLocales },
@@ -22,15 +23,18 @@ export function generateTypes({
       }
       const AST = new IntlMessageFormat(value, defaultLocaleFound, undefined, { ignoreTag: true }).getAst();
       const keyParameters = extractParameters(AST);
+      const isPlural = isPluralTranslation(value);
 
       if (keyParameters.length) {
         return {
           name: key,
           params: keyParameters,
+          plural: isPlural,
         };
       } else {
         return {
           name: key,
+          plural: isPlural,
         };
       }
     } catch {

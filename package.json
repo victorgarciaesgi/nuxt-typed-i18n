@@ -6,7 +6,7 @@
     "prepack": "nuxt-module-build build",
     "dev": "npm run dev:prepare && nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxi prepare playground",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "test": "vitest run",
     "test:watch": "vitest watch",
@@ -16,31 +16,32 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "4.1.2",
-    "intl-messageformat": "10.7.18",
-    "@intlify/core-base": "11.1.12",
     "@formatjs/icu-messageformat-parser": "2.11.4",
-    "type-fest": "5.1.0"
+    "@intlify/core-base": "11.1.12",
+    "@nuxt/kit": "4.1.2",
+    "intl-messageformat": "10.7.18"
   },
   "peerDependencies": {
     "@nuxtjs/i18n": ">= 10.1.2"
   },
   "devDependencies": {
-    "@nuxtjs/i18n": "10.1.2",
     "@nuxt/devtools": "2.7.0",
     "@nuxt/eslint-config": "1.9.0",
     "@nuxt/module-builder": "1.0.2",
     "@nuxt/schema": "4.1.2",
     "@nuxt/test-utils": "3.20.1",
+    "@nuxtjs/i18n": "10.1.2",
     "@types/node": "22.14.0",
     "changelogen": "0.6.2",
-    "oxlint": "1.24.0",
+    "corepack": "0.34.0",
     "nuxt": "4.1.2",
+    "oxlint": "1.24.0",
     "prettier": "3.6.2",
+    "type-fest": "5.1.0",
     "typescript": "5.9.3",
     "vitest": "4.0.4",
-    "vue-tsc": "3.1.2",
-    "corepack": "0.34.0"
+    "vue-i18n": "11.1.12",
+    "vue-tsc": "3.1.2"
   },
   "type": "module",
   "exports": {

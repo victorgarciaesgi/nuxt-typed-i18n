@@ -1,5 +1,13 @@
 <template>
   <div> Nuxt module playground! </div>
+  {{ $t('order.status', { orderId: 123, status: 1 }) }}
+  {{ $t('actions.cancel') }}
+  {{ $t('cart.items', { count: 1 }) }}
+  {{ $t('cart.items', 1) }}
+
+  // ❌ should error
+  {{ $t('cart.items') }}
+  {{ $t('order.status') }}
 </template>
 
 <script setup lang="ts">
@@ -10,4 +18,10 @@ const { t } = useI18n();
 
 t('order.status', { orderId: 123, status: 1 });
 t('actions.cancel');
+t('cart.items', { count: 1 });
+t('cart.items', 1);
+
+// ❌ should error
+t('cart.items'); // No plural
+t('order.status'); // No arguments
 </script>

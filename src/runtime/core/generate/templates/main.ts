@@ -1,21 +1,29 @@
 import type { MatchedKey } from '../../../types/languages.types';
 
 export function createMainTemplate(typedKeys: MatchedKey[], availableLocales: string[]) {
-  function generateTypeParams(params?: (string | number)[]) {
-    const filteredParams = [...new Set(params ?? [])];
-    if (!filteredParams.length) {
-      return 'never';
-    }
+  function generateTypeParams(properties: MatchedKey) {
+    const filteredParams = [...new Set(properties.params ?? [])];
     const paramaterType = `TranslationArg`;
-    if (filteredParams.some((param) => typeof param === 'number')) {
-      return `[${filteredParams.map(() => `${paramaterType}`).join(', ')}]`;
-    } else {
-      return `{${filteredParams.map((paramName) => `"${paramName}": ${paramaterType}`).join(',')}}`;
+
+    if (!filteredParams.length) {
+      if (!properties.plural) {
+        return 'KeyOptions<never>';
+      } else {
+        return `KeyOptions<{ count: ${paramaterType} } , true>`;
+      }
     }
+    let params: string = '';
+    if (filteredParams.some((param) => typeof param === 'number')) {
+      params = `[${filteredParams.map(() => `${paramaterType}`).join(', ')}]`;
+    } else {
+      params = `{${filteredParams.map((paramName) => `"${paramName}": ${paramaterType}`).join(',')}}`;
+    }
+
+    return `KeyOptions<${params} , ${properties.plural ?? false}>`;
   }
 
   const typedTranslationsKeys = typedKeys
-    .map(({ name, params }) => `"${name}": ${generateTypeParams(params)}`)
+    .map((params) => `"${params.name}": ${generateTypeParams(params)}`)
     .join(';\n  ');
 
   const availableLocalesType = availableLocales
@@ -27,15 +35,10 @@ export function createMainTemplate(typedKeys: MatchedKey[], availableLocales: st
    * Types are exported here because weirdly Nuxt can't compile the generics with addTemplate
    */
   const typeTemplate = `
+import type { KeyOptions, TranslationArg } from './type-utils';
 export type TranslationsDictionary = {
   ${typedTranslationsKeys};
 }
 export type AvailableLocales = ${availableLocalesType};`;
   return typeTemplate;
-}
-
-export function createIndexTemplate() {
-  return `export * from './translations';
-export * from './t.global.types';
-export * from './type-utils';`;
 }

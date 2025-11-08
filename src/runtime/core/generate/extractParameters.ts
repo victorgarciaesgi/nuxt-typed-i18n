@@ -13,6 +13,8 @@ export function extractParameters(treeList: MessageFormatElement[]): (string | n
           // Handle cases like <b>{0}</b>
           return acc.concat(...extractParameters(format.children));
         } else if (format.type === TYPE.select || format.type === TYPE.plural) {
+          if (format.type === TYPE.plural) {
+          }
           const children = Object.entries(format.options)
             .map(([_, { value }]) => value)
             .flat();

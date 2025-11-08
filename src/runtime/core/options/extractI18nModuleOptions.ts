@@ -16,12 +16,12 @@ export function extractI18nModuleOptions(nuxt: Nuxt): NuxtI18nOptions | undefine
       const [moduleName, options] = mod;
       const isRegistered = moduleName === '@nuxtjs/i18n';
       if (isRegistered) {
-        i18nOptions = options;
+        i18nOptions = options ?? {};
       }
     } else {
       const isRegistered = mod === '@nuxtjs/i18n';
       if (isRegistered) {
-        i18nOptions = nuxt.options.i18n;
+        i18nOptions = nuxt.options.i18n ?? {};
       }
     }
   });
