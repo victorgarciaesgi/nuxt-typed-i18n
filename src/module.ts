@@ -69,7 +69,7 @@ export default defineNuxtModule<ModuleOptions>({
 
           addTypeTemplate({
             src: resolve('./runtime/core/generate/templates/files/global.ts'),
-            filename: 'i18n/t.global.types.d.ts',
+            filename: 'i18n/global.d.ts',
             write: true,
           });
 

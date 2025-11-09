@@ -1,9 +1,10 @@
 <template>
   <div> Nuxt module playground! </div>
   {{ $t('order.status', { orderId: 123, status: 1 }) }}
-  {{ $t('actions.cancel') }}
+  {{ $t('actions.cancel', ['test', 'test2']) }}
   {{ $t('cart.items', { count: 1 }) }}
   {{ $t('cart.items', 1) }}
+  {{ $t('hello', { count: 1 }) }}
 
   // ❌ should error
   {{ $t('cart.items') }}
@@ -16,11 +17,10 @@ const { t } = useI18n();
 // TODO handle nested keys
 
 t('order.status', { orderId: 123, status: 1 });
-t('actions.cancel');
 t('cart.items', { count: 1 });
 t('cart.items', 1);
 t('files.selected', { count: 1, name: 'test' });
-t('search.noResults', { n: 1 });
+t('actions.cancel', ['test', 'test2']);
 
 // ❌ should error
 t('cart.items'); // No plural
