@@ -11,6 +11,14 @@ declare module '@vue/runtime-core' {
   }
 }
 
+declare global {
+  // @ts-ignore
+  var $t: TypedComposerTranslation<
+    TranslationsDictionary,
+    UseI18nOptions['locale'] extends unknown ? string : UseI18nOptions['locale']
+  >;
+}
+
 declare module 'vue' {
   interface ComponentCustomProperties {
     // @ts-ignore

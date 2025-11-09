@@ -1,6 +1,7 @@
 import { addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit';
 import { extractDefaultMessages, extractI18nModuleOptions, generateTypes } from './runtime/core';
 import { consola } from 'consola';
+import { removeVueI18nDefinitions } from './runtime/core/cleanup';
 
 export interface ModuleOptions {
   /** Fallback path to static json file to parse at build time to generate the types */
@@ -71,6 +72,23 @@ export default defineNuxtModule<ModuleOptions>({
             src: resolve('./runtime/core/generate/templates/files/global.ts'),
             filename: 'i18n/global.d.ts',
             write: true,
+          });
+
+          addTypeTemplate({
+            src: resolve('./runtime/core/generate/templates/files/i18n-component.ts'),
+            filename: 'i18n/i18n-component.d.ts',
+            write: true,
+          });
+
+          nuxt.options.alias = {
+            ...nuxt.options.alias,
+            '@i18n': resolve(`${nuxt.options.rootDir}/.nuxt/i18n`),
+          };
+
+          // Force register of type declaration
+          nuxt.hook('prepare:types', (options) => {
+            options.tsConfig.include?.unshift('./i18n/index.d.ts');
+            removeVueI18nDefinitions({ rootDir: nuxt.options.rootDir });
           });
 
           consola.success('[nuxt-typed-i18n] Types generated in .nuxt/i18n');
