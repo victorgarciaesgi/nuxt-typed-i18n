@@ -13,7 +13,7 @@
   "delete": "Delete",
   "actions.close": "Close",
   "search": "Search",
-  "search.noResults": "No results found",
+  "search.noResults": "No results found | {n} results found",
   "readMore": "Read more",
   "hideDetails": "Hide details",
   "nav.profile": "Profile",
@@ -48,6 +48,6 @@
   "likes.count": "no likes | one like | {count} likes",
   "followers.count": "no followers | one follower | {count} followers",
   "days.remaining": "no days remaining | one day remaining | {count} days remaining",
-  "files.selected": "no files selected | one file selected | {count} files selected",
+  "files.selected": "no files selected | one file selected | {count} files selected {name}",
   "tasks.pending": "no pending tasks | one pending task | {count} pending tasks"
 }

@@ -1,5 +1,6 @@
 import { addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit';
 import { extractDefaultMessages, extractI18nModuleOptions, generateTypes } from './runtime/core';
+import { consola } from 'consola';
 
 export interface ModuleOptions {
   /** Fallback path to static json file to parse at build time to generate the types */
@@ -30,9 +31,10 @@ export default defineNuxtModule<ModuleOptions>({
   },
   setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url);
-    const i18nOptions = extractI18nModuleOptions(nuxt);
 
     nuxt.hook('modules:done', () => {
+      const i18nOptions = extractI18nModuleOptions(nuxt);
+
       if (!i18nOptions) {
         console.error('[nuxt-typed-i18n] @nuxtjs/i18n module is not registered');
       } else {
@@ -70,6 +72,8 @@ export default defineNuxtModule<ModuleOptions>({
             filename: 'i18n/t.global.types.d.ts',
             write: true,
           });
+
+          consola.success('[nuxt-typed-i18n] Types generated in .nuxt/i18n');
         } catch (error) {
           console.error('[nuxt-typed-i18n] Error generating types', { cause: error });
         }

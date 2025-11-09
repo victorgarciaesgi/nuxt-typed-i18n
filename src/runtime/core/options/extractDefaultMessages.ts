@@ -1,4 +1,4 @@
-import type { LocaleObject, NuxtI18nOptions } from '@nuxtjs/i18n';
+import type { LocaleFile, LocaleObject, NuxtI18nOptions } from '@nuxtjs/i18n';
 import path from 'path';
 import type { ModuleOptions } from '../../../module';
 import { isEmpty } from '../../utils/isEmpty';
@@ -23,18 +23,40 @@ export function extractDefaultMessages(
     throw new Error('[nuxt-typed-i18n] No locales found');
   }
 
-  function tryParseLocale(locale?: LocaleObject<string>): boolean {
-    if (locale?.file != null && !defaultMessagesFound) {
-      const fileName = typeof locale.file === 'string' ? locale.file : locale.file.path;
-      const fileExtension = path.extname(fileName).toLowerCase();
+  function tryExtractFromLocaleFile(file: string | LocaleFile): Record<string, string> | undefined {
+    let messages: Record<string, string> | undefined = undefined;
+    const fileName = typeof file === 'string' ? file : file.path;
+    const fileExtension = path.extname(fileName).toLowerCase();
 
-      if (fileExtension.includes('.json') && langDir && nuxt.options.rootDir) {
-        defaultMessages = extractContentFromFile({ fileName, langDir, nuxt });
-        defaultMessagesFound = true;
-        defaultLocaleFound = locale.code;
-        return true;
+    if (fileExtension.includes('.json') && langDir && nuxt.options.rootDir) {
+      messages = extractContentFromFile({ fileName, langDir, nuxt });
+    }
+    return messages;
+  }
+
+  function tryParseLocale(locale?: LocaleObject<string>): boolean {
+    if (!defaultMessagesFound) {
+      if (locale?.file != null) {
+        const messages = tryExtractFromLocaleFile(locale.file);
+        if (messages) {
+          defaultMessages = messages;
+          defaultMessagesFound = true;
+          defaultLocaleFound = locale.code;
+          return true;
+        }
+      } else if (locale?.files != null) {
+        for (const file of locale.files) {
+          const messages = tryExtractFromLocaleFile(file);
+          if (messages) {
+            defaultMessages = messages;
+            defaultMessagesFound = true;
+            defaultLocaleFound = locale.code;
+            return true;
+          }
+        }
       }
     }
+
     return false;
   }
 

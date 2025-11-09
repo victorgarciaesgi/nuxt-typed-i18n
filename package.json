@@ -19,6 +19,7 @@
     "@formatjs/icu-messageformat-parser": "2.11.4",
     "@intlify/core-base": "11.1.12",
     "@nuxt/kit": "4.1.2",
+    "consola": "3.4.2",
     "intl-messageformat": "10.7.18"
   },
   "peerDependencies": {
@@ -66,16 +67,16 @@
     "name": "Victor Garcia",
     "url": "https://github.com/victorgarciaesgi"
   },
-  "homepage": "https://reglejs.dev/",
+  "homepage": "TODO",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/victorgarciaesgi/regle.git"
+    "url": "git+https://github.com/victorgarciaesgi/nuxt-typed-i18n.git"
   },
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "node": ">=22 < 23",
+    "node": ">=22",
     "pnpm": ">=10.14.0"
   },
   "packageManager": "pnpm@10.18.2",

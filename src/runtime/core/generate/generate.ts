@@ -23,7 +23,7 @@ export function generateTypes({
       }
       const AST = new IntlMessageFormat(value, defaultLocaleFound, undefined, { ignoreTag: true }).getAst();
       const keyParameters = extractParameters(AST);
-      const isPlural = isPluralTranslation(value);
+      const isPlural = isPluralTranslation(value, keyParameters);
 
       if (keyParameters.length) {
         return {

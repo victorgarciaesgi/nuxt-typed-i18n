@@ -5,40 +5,43 @@ export interface TypedComposerTranslation<
   Translations extends Record<string, KeyOptions<any, any>> = {},
   Locales = 'en-US',
 > {
-  <Key extends keyof Translations>(key: Key, ...[options]: ProcessKeyOptions<Translations, Key, []>): string;
+  <Key extends keyof Translations>(key: Key, ...[options]: ProcessKeyOptions<Translations, Key, [], []>): string;
   <Key extends keyof Translations>(
     key: Key,
-    ...[options]: ProcessKeyOptions<Translations, Key, [options: TranslateOptions<Locales>]>
+    ...[options]: ProcessKeyOptions<Translations, Key, [], [options: TranslateOptions<Locales>]>
   ): string;
   <Key extends keyof Translations>(
     key: Key,
-    ...[options]: ProcessKeyOptions<Translations, Key, [defaultMsg: string]>
+    ...[options]: ProcessKeyOptions<Translations, Key, [], [defaultMsg: string]>
   ): string;
   <Key extends keyof Translations>(
     key: Key,
-    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[], options: TranslateOptions<Locales>]>
+    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[]], [options: TranslateOptions<Locales>]>
   ): string;
   <Key extends keyof Translations>(
     key: Key,
-    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[], defaultMsg: string]>
+    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[]], [defaultMsg: string]>
   ): string;
   <Key extends keyof Translations>(
     key: Key,
-    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[], plural: number]>
+    ...[options]: ProcessKeyOptions<Translations, Key, [list: unknown[]], []>
   ): string;
 }
 
 type ProcessKeyOptions<
   Translations extends Record<string, KeyOptions<any, any>>,
   Key extends keyof Translations,
+  TPRefixArgs extends [...any[]] = [],
   TAdditionalArgs extends [...any[]] = [],
 > = Key extends keyof Translations
   ? [Translations[Key]['args']] extends [never]
     ? TAdditionalArgs
     : Translations[Key]['plural'] extends true
-      ? [plural: number, ...TAdditionalArgs] | [named: Translations[Key]['args'], ...TAdditionalArgs]
+      ?
+          | [...TPRefixArgs, plural: number, ...TAdditionalArgs]
+          | [...TPRefixArgs, named: Translations[Key]['args'], ...TAdditionalArgs]
       : [named: Translations[Key]['args'], ...TAdditionalArgs]
-  : TAdditionalArgs;
+  : [...TPRefixArgs, ...TAdditionalArgs];
 
 export type TupleIndices<T extends readonly any[]> =
   Extract<keyof T, `${number}`> extends `${infer N extends number}` ? N : never;
