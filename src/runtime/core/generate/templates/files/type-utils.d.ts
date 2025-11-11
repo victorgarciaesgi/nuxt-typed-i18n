@@ -1,4 +1,4 @@
-import type { TranslateOptions } from 'vue-i18n';
+import type { Composer, TranslateOptions, UseI18nOptions } from 'vue-i18n';
 import type { TranslationsDictionary } from './translations';
 
 export interface TypedComposerTranslation<
@@ -42,6 +42,21 @@ type ProcessKeyOptions<
           | [...TPRefixArgs, named: Translations[Key]['args'], ...TAdditionalArgs]
       : [named: Translations[Key]['args'], ...TAdditionalArgs]
   : [...TPRefixArgs, ...TAdditionalArgs];
+
+export type TypedComposer = Omit<
+  Composer<
+    NonNullable<UseI18nOptions['messages']>,
+    NonNullable<UseI18nOptions['datetimeFormats']>,
+    NonNullable<UseI18nOptions['numberFormats']>,
+    UseI18nOptions['locale'] extends unknown ? string : UseI18nOptions['locale']
+  >,
+  't'
+> & {
+  t: TypedComposerTranslation<
+    TranslationsDictionary,
+    UseI18nOptions['locale'] extends unknown ? string : UseI18nOptions['locale']
+  >;
+};
 
 export type TupleIndices<T extends readonly any[]> =
   Extract<keyof T, `${number}`> extends `${infer N extends number}` ? N : never;

@@ -12,9 +12,15 @@ export function extractContentFromFile({
   nuxt: Nuxt;
 }): Record<string, any> {
   try {
-    const filePath = path.join(nuxt.options.rootDir, 'i18n', langDir, fileName);
-    const fileContent = readFileSync(filePath, 'utf-8');
-    return JSON.parse(fileContent) as Record<string, string>;
+    const fileExtension = path.extname(fileName).toLowerCase();
+    if (fileExtension === '.json') {
+      return JSON.parse(readFileSync(path.join(nuxt.options.rootDir, langDir, fileName), 'utf-8')) as Record<
+        string,
+        string
+      >;
+    } else {
+      throw new Error(`[nuxt-typed-i18n] Unsupported file extension: ${fileExtension}`);
+    }
   } catch (error) {
     throw new Error(`[nuxt-typed-i18n] Failed to read locale file: ${fileName}`, { cause: error });
   }

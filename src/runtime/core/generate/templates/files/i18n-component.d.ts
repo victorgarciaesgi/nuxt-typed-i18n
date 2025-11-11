@@ -21,12 +21,3 @@ type TypedI18nTSlots<Key extends keyof TranslationsDictionary> = TranslationsDic
 export type TypedI18nT = new <Key extends keyof TranslationsDictionary>(
   $props: VNodeProps & TypedI18nTProps<Key>
 ) => InstanceType<DefineSetupFnComponent<TypedI18nTProps<Key>, [], SlotsType<TypedI18nTSlots<Key>>>>;
-
-declare module 'vue' {
-  export interface GlobalComponents {
-    // @ts-ignore
-    'i18n-t': TypedI18nT;
-    // @ts-ignore
-    I18nT: TypedI18nT;
-  }
-}

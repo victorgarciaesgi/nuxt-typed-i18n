@@ -46,7 +46,8 @@ function inferTranslationType({
     // Fallback to classic regex check
     const matches = [...value.matchAll(/\{([^']+?)\}/gi)].map((match) => match[1]);
     const parameters = matches.filter((match): match is string => match !== null);
-    return { name: key, params: parameters };
+    const isPlural = isPluralTranslation(value, parameters);
+    return { name: key, params: parameters, plural: isPlural };
   }
 }
 

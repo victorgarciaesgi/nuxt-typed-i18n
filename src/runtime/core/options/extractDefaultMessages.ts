@@ -11,7 +11,7 @@ import { extractContentFromFile } from './extractContentFromFile';
  * Only default messages are needed to generate the types
  */
 export function extractDefaultMessages(
-  { locales, langDir, fallBackStaticMessages, ignoreKeys, defaultLocale }: NuxtI18nOptions & ModuleOptions,
+  { locales, langDir, fallBackFile, ignoreKeys, defaultLocale }: NuxtI18nOptions & ModuleOptions,
   nuxt: Nuxt
 ): ExtractDefaultMessagesPayload {
   let defaultMessagesFound = false;
@@ -26,9 +26,8 @@ export function extractDefaultMessages(
   function tryExtractFromLocaleFile(file: string | LocaleFile): Record<string, string> | undefined {
     let messages: Record<string, string> | undefined = undefined;
     const fileName = typeof file === 'string' ? file : file.path;
-    const fileExtension = path.extname(fileName).toLowerCase();
 
-    if (fileExtension.includes('.json') && langDir && nuxt.options.rootDir) {
+    if (langDir && nuxt.options.rootDir) {
       messages = extractContentFromFile({ fileName, langDir, nuxt });
     }
     return messages;
@@ -75,9 +74,8 @@ export function extractDefaultMessages(
       } else {
         if (locale.file != null && !defaultMessagesFound) {
           const fileName = typeof locale.file === 'string' ? locale.file : locale.file.path;
-          const fileExtension = path.extname(fileName).toLowerCase();
 
-          if (fileExtension.includes('.json') && langDir && nuxt.options.rootDir) {
+          if (langDir && nuxt.options.rootDir) {
             defaultMessages = extractContentFromFile({ fileName, langDir, nuxt });
             defaultMessagesFound = true;
             defaultLocaleFound = locale.code;
@@ -101,8 +99,8 @@ export function extractDefaultMessages(
   }
 
   if (isEmpty(defaultMessages)) {
-    if (fallBackStaticMessages && path.isAbsolute(fallBackStaticMessages)) {
-      defaultMessages = extractContentFromFile({ fileName: fallBackStaticMessages, nuxt });
+    if (fallBackFile && path.isAbsolute(fallBackFile)) {
+      defaultMessages = extractContentFromFile({ fileName: fallBackFile, nuxt });
     }
   }
 
